@@ -335,6 +335,35 @@ class ComparatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, Comparator::compareSchemas( $schema1, $schema2 ) );
     }
 
+
+    public function testCompareAddedIndexAsPrimaryKey()
+    {
+        $table = new \Doctrine\DBAL\Schema\Table('twitter_users');
+        $table->addColumn('logged_in_at', 'datetime', array('nullable' => false));
+        $table->addIndex(array('logged_in_at'), 'idx_logged_in_at');
+        $table->addColumn('twitterId', 'integer', array('nullable' => false));
+        $table->addColumn('displayName', 'string', array('nullable' => false));
+        $table->setPrimaryKey(array('logged_in_at'));
+
+        $newtable = new \Doctrine\DBAL\Schema\Table('twitter_users');
+        $newtable->addColumn('id', 'integer', array('autoincrement' => true));
+        $newtable->addColumn('twitter_id', 'integer', array('nullable' => false));
+        $newtable->addColumn('display_name', 'string', array('nullable' => false));
+        $newtable->addColumn('logged_in_at', 'datetime', array('nullable' => false));
+        $newtable->addIndex(array('logged_in_at'), 'idx_logged_in_at');
+        $newtable->setPrimaryKey(array('id'));
+
+        $c = new Comparator();
+        $tableDiff = $c->diffTable($table, $newtable);
+
+        $this->assertInstanceOf('Doctrine\DBAL\Schema\TableDiff', $tableDiff);
+        $this->assertEquals(array('id'), array_keys($tableDiff->addedColumns));
+        $this->assertEquals(0, count($tableDiff->removedColumns));
+        $this->assertEquals(1, count($tableDiff->addedIndexes));
+        $this->assertEquals(0, count($tableDiff->removedIndexes));
+        $this->assertEquals(0, count($tableDiff->changedIndexes));
+    }
+
     public function testCompareChangedIndex()
     {
         $schema1 = new Schema( array(
