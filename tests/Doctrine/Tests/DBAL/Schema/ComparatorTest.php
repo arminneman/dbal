@@ -362,7 +362,6 @@ class ComparatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, count($tableDiff->addedIndexes));
         $this->assertEquals(1, count($tableDiff->changedIndexes));
         $this->assertEquals(0, count($tableDiff->removedIndexes));
-        $this->assertEquals(0, count($tableDiff->changedIndexes));
     }
 
     public function testCompareChangedIndex()
