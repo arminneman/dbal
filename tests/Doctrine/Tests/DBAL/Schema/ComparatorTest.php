@@ -341,8 +341,8 @@ class ComparatorTest extends \PHPUnit_Framework_TestCase
         $table = new \Doctrine\DBAL\Schema\Table('twitter_users');
         $table->addColumn('logged_in_at', 'datetime', array('nullable' => false));
         $table->addIndex(array('logged_in_at'), 'idx_logged_in_at');
-        $table->addColumn('twitterId', 'integer', array('nullable' => false));
-        $table->addColumn('displayName', 'string', array('nullable' => false));
+        $table->addColumn('twitter_id', 'integer', array('nullable' => false));
+        $table->addColumn('display_name', 'string', array('nullable' => false));
         $table->setPrimaryKey(array('logged_in_at'));
 
         $newtable = new \Doctrine\DBAL\Schema\Table('twitter_users');
@@ -360,6 +360,7 @@ class ComparatorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('id'), array_keys($tableDiff->addedColumns));
         $this->assertEquals(0, count($tableDiff->removedColumns));
         $this->assertEquals(1, count($tableDiff->addedIndexes));
+        $this->assertEquals(1, count($tableDiff->changedIndexes));
         $this->assertEquals(0, count($tableDiff->removedIndexes));
         $this->assertEquals(0, count($tableDiff->changedIndexes));
     }
