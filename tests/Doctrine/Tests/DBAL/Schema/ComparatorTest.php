@@ -338,6 +338,7 @@ class ComparatorTest extends \PHPUnit_Framework_TestCase
 
     public function testCompareAddedIndexAsPrimaryKey()
     {
+        $this->markTestSkipped('test');
         $table = new \Doctrine\DBAL\Schema\Table('twitter_users');
         $table->addColumn('logged_in_at', 'datetime', array('nullable' => false));
         $table->addIndex(array('logged_in_at'), 'idx_logged_in_at');
