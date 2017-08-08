@@ -613,6 +613,13 @@ class MySqlPlatform extends AbstractPlatform
 
         $sql = array();
         $tableSql = array();
+
+        if (isset($diff->changedIndexes['primary'])) {
+            $sql = array_merge($sql, [$this->getDropPrimaryKeySQL($diff->getName($this)->getQuotedName($this))]);
+            $keyColumns = array_unique(array_values($diff->changedIndexes['primary']->getColumns()));
+            $queryParts[] = 'ADD PRIMARY KEY (' . implode(', ', $keyColumns) . ')';
+            unset($diff->changedIndexes['primary']);
+        }
         
 
         if ( ! $this->onSchemaAlterTable($diff, $tableSql)) {
